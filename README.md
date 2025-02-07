@@ -14,15 +14,40 @@ different tabs, streamlining your development workflow.
 |------------------|-------------|
 | ![Standard Logging](/docs/screenshots/standard_logging.png)  | ![SIO Logging](docs/screenshots/sio_logging.png)  |
 
+## Installation
+
+1. Add SIO to your deps in `mix.exs`:
+`{:sio, github: "dillonoconnor/sio", only: :dev}`
+
+2. Add the `sio_start` alias to PATH:
+
+**Bash**:
+
+```
+echo "alias sio_start='elixir --sname sio@localhost -S mix run --no-halt --no-deps-check'" >> ~/.bashrc
+```
+
+**Fish**:
+
+```
+echo "alias sio_start='elixir --sname sio@localhost -S mix run --no-halt --no-deps-check'" >> ~/.config/fish/config.fish
+```
+
+**Zsh**:
+
+```
+echo "alias sio_start='elixir --sname sio@localhost -S mix run --no-halt --no-deps-check'" >> ~/.zshrc
+```
+
+Then, restart your terminal or run `source ~/.{YOUR_CONFIG_FILE_AS_ABOVE}` to make the command available.
+
 ## Usage
 
-1. Start your main app with a short name:
-`iex --sname main@localhost -S mix phx.server`
+1. Start SIO on one tab: `sio start`
 
-2. Start your logger in a new tab:
-`iex --sname sio@localhost -S mix`
+1. Start your main app on another tab (any name): `elixir --sname main@localhost -S mix phx.server`
 
-3. Use SIO just like you would with IO functions:
+3. Use SIO just like you would the regular IO functions:
 
 ```elixir
 SIO.inspect(object)
