@@ -1,13 +1,18 @@
-# SIO
+# SIO (SideIO)
 
-**Sio** is an Elixir package that allows you to redirect logs
+**SIO** is an Elixir package that allows you to redirect logs
 that would typically go to `stdout` into a separate terminal
 tab. This is useful for keeping your primary terminal output
 clean and organized, while still being able to view logs in a
 dedicated tab for debugging or monitoring purposes.
 
-With **Sio**, you can easily manage log visibility across
+With **SIO**, you can easily manage log visibility across
 different tabs, streamlining your development workflow.
+
+## Screenshots
+| Standard Logging | SIO Logging |
+|------------------|-------------|
+| ![Standard Logging](/docs/screenshots/standard_logging.png)  | ![SIO Logging](docs/screenshots/sio_logging.png)  |
 
 ## Usage
 
