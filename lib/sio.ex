@@ -1,22 +1,25 @@
 defmodule SIO do
   @moduledoc false
 
-  def inspect(message, loc \\ nil) do
-    spawn_task(message, :inspect, loc)
+  def inspect(message) do
+    spawn_task(message, :inspect, trace_location())
   end
 
-  def puts(message, loc \\ nil) do
-    spawn_task(message, :puts, loc)
+  def puts(message) do
+    spawn_task(message, :puts, trace_location())
   end
 
   def receive_log(message, fun, loc) do
-    if loc, do: IO.puts("\e[90m#{loc}\e[0m")
+    IO.puts("\e[90m📍 #{loc.macro_loc}\e[0m")
+    IO.puts("\e[90m   #{loc.micro_loc}\e[0m")
 
     timestamp =
-      DateTime.utc_now()
-      |> Calendar.strftime("%Y-%m-%d %H:%M:%S.%3fZ")
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.to_time()
+      |> Time.truncate(:second)
 
-    IO.puts("\e[90m#{String.duplicate("-", 6)}#{timestamp}#{String.duplicate("-", 6)}\e[0m")
+    IO.puts("\e[90m⌚ #{timestamp} UTC\e[0m")
+    IO.puts("\t")
 
     case fun do
       :inspect ->
@@ -39,7 +42,6 @@ defmodule SIO do
         IO.puts(message)
     end
 
-    IO.puts("\e[90m" <> String.duplicate("-", 39) <> "\e[0m")
     IO.puts("\n")
   end
 
@@ -53,9 +55,15 @@ defmodule SIO do
     {SIO.TaskSupervisor, :sio@localhost}
   end
 
-  defmacro log_location do
-    quote do
-      "#{__ENV__.file}:#{__ENV__.line}"
-    end
+  defp trace_location do
+    IO.inspect(Process.info(self(), :current_stacktrace))
+    {:current_stacktrace, stacktrace} = Process.info(self(), :current_stacktrace)
+    [_self, _insp_or_puts, _trace, caller | _rest] = stacktrace
+    {mod, fun, arity, meta} = caller
+    file = Keyword.get(meta, :file)
+    line = Keyword.get(meta, :line)
+
+    short_mod = mod |> to_string() |> String.replace_prefix("Elixir.", "")
+    %{ macro_loc: "#{short_mod}.#{fun}/#{arity}", micro_loc: "#{file}:#{line}" }
   end
 end
