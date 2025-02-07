@@ -10,12 +10,13 @@ defmodule SIO do
   end
 
   def receive_log(message, fun, loc) do
+    if loc, do: IO.puts("\e[90m#{loc}\e[0m")
+
     timestamp =
       DateTime.utc_now()
       |> Calendar.strftime("%Y-%m-%d %H:%M:%S.%3fZ")
 
     IO.puts("\e[90m#{String.duplicate("-", 6)}#{timestamp}#{String.duplicate("-", 6)}\e[0m")
-    if loc, do: IO.puts("\e[36m#{loc}\e[0m")
 
     case fun do
       :inspect ->
