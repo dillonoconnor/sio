@@ -10,11 +10,12 @@ defmodule SIO do
   end
 
   def receive_log(message, fun, loc) do
-    IO.puts("\n")
-    IO.puts("\e[34m#{String.duplicate("-", 17)} Log #{String.duplicate("-", 18)}\e[0m")
-    if loc, do: IO.puts("\e[95m#{loc}\e[0m")
-    IO.puts("\e[37m#{DateTime.utc_now()}\e[0m")
-    IO.puts("\n")
+    timestamp =
+      DateTime.utc_now()
+      |> Calendar.strftime("%Y-%m-%d %H:%M:%S.%3fZ")
+
+    IO.puts("\e[90m#{String.duplicate("-", 6)}#{timestamp}#{String.duplicate("-", 6)}\e[0m")
+    if loc, do: IO.puts("\e[36m#{loc}\e[0m")
 
     case fun do
       :inspect ->
@@ -22,10 +23,10 @@ defmodule SIO do
           message,
           pretty: true,
           syntax_colors: [
-            number: :magenta,
+            number: :yellow,
             atom: :cyan,
             string: :green,
-            boolean: :yellow,
+            boolean: :light_red,
             nil: :red
           ]
         )
@@ -37,7 +38,8 @@ defmodule SIO do
         IO.puts(message)
     end
 
-    IO.puts("\e[34m" <> String.duplicate("-", 40) <> "\e[0m")
+    IO.puts("\e[90m" <> String.duplicate("-", 39) <> "\e[0m")
+    IO.puts("\n")
   end
 
   def spawn_task(message, fun, loc) do
