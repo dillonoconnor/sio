@@ -1,5 +1,8 @@
 defmodule SIO do
-  @moduledoc false
+  @moduledoc """
+  A module responsible for spawning logging tasks to be
+  handled by the SIO node.
+  """
 
   def inspect(message) do
     spawn_task(message, :inspect, trace_location())
