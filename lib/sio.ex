@@ -1,5 +1,8 @@
 defmodule SIO do
-  @moduledoc false
+  @moduledoc """
+  A module responsible for spawning logging tasks to be
+  handled by the SIO node.
+  """
 
   def inspect(message) do
     spawn_task(message, :inspect, trace_location())
@@ -64,6 +67,6 @@ defmodule SIO do
     line = Keyword.get(meta, :line)
 
     short_mod = mod |> to_string() |> String.replace_prefix("Elixir.", "")
-    %{ macro_loc: "#{short_mod}.#{fun}/#{arity}", micro_loc: "#{file}:#{line}" }
+    %{macro_loc: "#{short_mod}.#{fun}/#{arity}", micro_loc: "#{file}:#{line}"}
   end
 end
